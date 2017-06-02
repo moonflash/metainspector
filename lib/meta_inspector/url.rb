@@ -69,7 +69,7 @@ module MetaInspector
     private
 
     def defaults
-      { :normalize => true }
+      { :normalize => false }
     end
 
     # Adds 'http' as default scheme, if there is none

@@ -13,6 +13,7 @@ module MetaInspector
       @head_links_parser = MetaInspector::Parsers::HeadLinksParser.new(self)
       @meta_tag_parser = MetaInspector::Parsers::MetaTagsParser.new(self)
       @links_parser    = MetaInspector::Parsers::LinksParser.new(self)
+      @media_parser    = MetaInspector::Parsers::MediaParser.new(self)
       @download_images = options[:download_images]
       @images_parser   = MetaInspector::Parsers::ImagesParser.new(self, download_images: @download_images)
       @texts_parser    = MetaInspector::Parsers::TextsParser.new(self)
@@ -21,6 +22,7 @@ module MetaInspector
     end
 
     extend Forwardable
+    delegate [:media]                                               => :@media_parser
     delegate [:url, :scheme, :host]                                 => :@document
     delegate [:meta_tags, :meta_tag, :meta, :charset]               => :@meta_tag_parser
     delegate [:head_links, :stylesheets, :canonicals, :feed]        => :@head_links_parser

@@ -48,7 +48,7 @@ module MetaInspector
     delegate [:parsed, :title, :best_title,
               :description, :best_description, :links,
               :images, :feed, :charset, :meta_tags,
-              :meta_tag, :meta, :favicon,
+              :meta_tag, :meta, :favicon, :media,
               :head_links, :stylesheets, :canonicals] => :@parser
 
     # Returns all document data as a nested Hash
@@ -69,6 +69,7 @@ module MetaInspector
         'content_type'     => content_type,
         'meta_tags'        => meta_tags,
         'favicon'          => images.favicon,
+        'media'            => media.youtube,
         'response'         => { 'status'  => response.status,
                                 'headers' => response.headers }
       }
@@ -92,7 +93,7 @@ module MetaInspector
         :allow_redirections     => true,
         :allow_non_html_content => false,
         :normalize_url          => true,
-        :download_images        => true }
+        :download_images        => false }
     end
 
     def default_user_agent
