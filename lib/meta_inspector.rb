@@ -10,6 +10,10 @@ require File.expand_path(File.join(File.dirname(__FILE__), 'meta_inspector/parse
 require File.expand_path(File.join(File.dirname(__FILE__), 'meta_inspector/parsers/head_links'))
 require File.expand_path(File.join(File.dirname(__FILE__), 'meta_inspector/parsers/meta_tags'))
 require File.expand_path(File.join(File.dirname(__FILE__), 'meta_inspector/parsers/texts'))
+require File.expand_path(File.join(File.dirname(__FILE__), 'meta_inspector/parsers/location/geo_tag_parser'))
+require File.expand_path(File.join(File.dirname(__FILE__), 'meta_inspector/parsers/location/icbm_parser'))
+require File.expand_path(File.join(File.dirname(__FILE__), 'meta_inspector/parsers/location/microformat_parser'))
+require File.expand_path(File.join(File.dirname(__FILE__), 'meta_inspector/parsers/location/parser'))
 require File.expand_path(File.join(File.dirname(__FILE__), 'meta_inspector/document'))
 require File.expand_path(File.join(File.dirname(__FILE__), 'meta_inspector/version'))
 
