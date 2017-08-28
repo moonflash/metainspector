@@ -49,7 +49,7 @@ module MetaInspector
               :description, :best_description, :links,
               :images, :feed, :charset, :meta_tags,
               :meta_tag, :meta, :favicon, :media, :location, :locations,
-              :head_links, :stylesheets, :canonicals, :html] => :@parser
+              :head_links, :stylesheets, :canonicals, :readable_text] => :@parser
 
     # Returns all document data as a nested Hash
     def to_hash
@@ -70,7 +70,7 @@ module MetaInspector
         'meta_tags'        => meta_tags,
         'favicon'          => images.favicon,
         'media'            => media.youtube,
-        'html'             => html,
+        'readable_text'    => readable_text,
         'response'         => { 'status'  => response.status,
                                 'headers' => response.headers }
       }

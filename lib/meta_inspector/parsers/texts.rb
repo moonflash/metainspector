@@ -19,7 +19,7 @@ module MetaInspector
         @description ||= meta['description']
       end
 
-      def html
+      def readable_text
         parsed.css('script').remove
         parsed.inner_text
       end
