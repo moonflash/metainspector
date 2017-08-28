@@ -19,6 +19,11 @@ module MetaInspector
         @description ||= meta['description']
       end
 
+      def html
+        parsed.css('script').remove
+        parsed.inner_text
+      end
+
       # A description getter that returns the first non-nill description
       # from the following candidates:
       # - the standard meta description
