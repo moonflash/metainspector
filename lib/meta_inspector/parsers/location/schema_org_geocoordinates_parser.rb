@@ -1,7 +1,7 @@
 module MetaInspector
   module Parsers
     module Location
-      class GeoTagParser < Base
+      class SchemaOrgGeocoordinatesParser < Base
         require 'bigdecimal'
         
         delegate [:parsed, :base_url]         => :@main_parser

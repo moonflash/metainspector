@@ -1,4 +1,5 @@
 require 'nokogiri'
+require 'postcodes_io'
 
 module MetaInspector
   ##
@@ -9,6 +10,7 @@ module MetaInspector
   #
   class Parser
     def initialize(document, options = {})
+      @pio = Postcodes::IO.new
       @document        = document
       @head_links_parser = MetaInspector::Parsers::HeadLinksParser.new(self)
       @meta_tag_parser = MetaInspector::Parsers::MetaTagsParser.new(self)
@@ -37,5 +39,10 @@ module MetaInspector
     def parsed
       @parsed ||= Nokogiri::HTML(@document.to_s)
     end
+
+    def pio
+      @pio
+    end
+
   end
 end

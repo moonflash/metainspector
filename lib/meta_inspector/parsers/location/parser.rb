@@ -3,8 +3,8 @@ module MetaInspector
     module Location
       class Parser < Base
         require 'bigdecimal'
-
-        delegate [:parsed, :base_url]         => :@main_parser
+        require "pry"
+        delegate [:pio, :parsed, :base_url]         => :@main_parser
         
         def initialize(main_parser)
           @main_parser = main_parser
@@ -12,11 +12,18 @@ module MetaInspector
         end
 
         def locations
+          @locations ||= get_locations
+        end
+
+        def get_locations
           locations = []
           locations << get_icbm if get_icbm
           locations << get_microservice if get_microservice
           locations << get_geotag if get_geotag
-          return locations.empty? ? nil : locations
+          locations << get_uk_postcode if get_uk_postcode
+          locations << google_link_parser if google_link_parser
+          locations << foursquare_tag_parser if foursquare_tag_parser
+          return locations.empty? ? nil : locations.flatten.uniq
         end
 
         def location
@@ -33,6 +40,19 @@ module MetaInspector
 
         def get_geotag
           MetaInspector::Parsers::Location::GeoTagParser.new(@main_parser).location
+        end
+
+        def get_uk_postcode
+          MetaInspector::Parsers::Location::UkPostcode.new(@main_parser).location
+        end
+
+        def google_link_parser
+          MetaInspector::Parsers::Location::GoogleLinkParser.new(@main_parser).location
+        end
+
+        def foursquare_tag_parser
+          MetaInspector::Parsers::Location::FoursquareTagParser.new(@main_parser).location
+          
         end
         
     

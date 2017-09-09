@@ -23,6 +23,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'addressable', '~> 2.5'
   gem.add_dependency 'fastimage', '~> 2.1'
   gem.add_dependency 'nesty', '~> 1.0'
+  gem.add_dependency 'postcodes_io', '~> 0.1.1'
 
   gem.add_development_dependency 'rspec', '~> 3.0'
   gem.add_development_dependency 'fakeweb', '1.3.0'
@@ -31,4 +32,5 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'rake', '~> 10.1.0'
   gem.add_development_dependency 'pry'
   gem.add_development_dependency 'rubocop'
+  
 end

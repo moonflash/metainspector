@@ -1,5 +1,6 @@
 module MetaInspector
   module Parsers
+
     ##
     # Base class from where the specialized parsers inherit from.
     #
@@ -13,6 +14,8 @@ module MetaInspector
     # which, in turn, delegates it to the LinksParser.
     #
     class Base
+      require 'bigdecimal'
+
       def initialize(main_parser)
         @main_parser = main_parser
       end

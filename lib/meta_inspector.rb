@@ -14,6 +14,9 @@ require File.expand_path(File.join(File.dirname(__FILE__), 'meta_inspector/parse
 require File.expand_path(File.join(File.dirname(__FILE__), 'meta_inspector/parsers/location/icbm_parser'))
 require File.expand_path(File.join(File.dirname(__FILE__), 'meta_inspector/parsers/location/microformat_parser'))
 require File.expand_path(File.join(File.dirname(__FILE__), 'meta_inspector/parsers/location/parser'))
+require File.expand_path(File.join(File.dirname(__FILE__), 'meta_inspector/parsers/location/uk_postcode_parser'))
+require File.expand_path(File.join(File.dirname(__FILE__), 'meta_inspector/parsers/location/google_link_parser'))
+require File.expand_path(File.join(File.dirname(__FILE__), 'meta_inspector/parsers/location/foursquare_tag_parser'))
 require File.expand_path(File.join(File.dirname(__FILE__), 'meta_inspector/document'))
 require File.expand_path(File.join(File.dirname(__FILE__), 'meta_inspector/version'))
 
