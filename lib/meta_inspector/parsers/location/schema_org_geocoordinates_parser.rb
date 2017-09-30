@@ -11,7 +11,7 @@ module MetaInspector
         end
 
         def location
-          {lat:lat, lng:lng, type:self.class.to_s} if lat && lng
+          {lat:lat, lng:lng, type:self.class.to_s} if lat && lng  && lat != 0 && lng != 0 
         end
         def lat
           @_lat || (parse! && @_lat)

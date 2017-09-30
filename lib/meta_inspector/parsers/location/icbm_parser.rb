@@ -11,7 +11,7 @@ module MetaInspector
         end
 
         def location
-          return {lat:lat, lng:lng} if lat && lng
+          return {lat:lat, lng:lng} if lat && lng  && lat != 0 && lng != 0 
         end
 
         def lat

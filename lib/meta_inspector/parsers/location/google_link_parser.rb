@@ -10,12 +10,11 @@ module MetaInspector
         end
 
         def locations
-          loc = [{:lat => @_lat, :lng => @_lng,:type =>self.class.to_s} ] if lat && lng
+          loc = [{:lat => @_lat, :lng => @_lng,:type =>self.class.to_s} ] if lat && lng && lat != 0 && lng != 0 
         end
 
         def location
-          ap "location"
-          loc = [{:lat => @_lat, :lng => @_lng,:type =>self.class.to_s} ] if lat && lng
+          loc = [{:lat => @_lat, :lng => @_lng,:type =>self.class.to_s} ] if lat && lng && lat != 0 && lng != 0 
         end
 
         def lat
