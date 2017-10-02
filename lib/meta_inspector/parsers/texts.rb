@@ -21,7 +21,8 @@ module MetaInspector
 
       def readable_text
         parsed.css('script').remove
-        parsed.inner_text
+        parsed.css('style').remove
+        parsed.inner_text.gsub(/\n/," ").gsub(/\t/, "").gsub(/\s{2,}/, " ")
       end
 
       # A description getter that returns the first non-nill description
@@ -60,15 +61,16 @@ module MetaInspector
           meta['description'],
           meta['og:description'],
           meta['twitter:description'],
-          secondary_description
+          secondary_description,
+          readable_text
         ]
-        candidates.find { |x| !x.to_s.empty? }
+        candidates.find { |x| x.to_s.length > 150 }
       end
 
       # Look for the first <p> block with 120 characters or more
       def secondary_description
         first_long_paragraph = parsed.search('//p[string-length() >= 120]').first
-        first_long_paragraph ? first_long_paragraph.text : ''
+        first_long_paragraph ? first_long_paragraph.text.gsub(/\n/," ").gsub(/\t/, "").gsub(/\s{2,}/, " ") : ''
       end
     end
   end
