@@ -91,13 +91,11 @@ module MetaInspector
       end
 
       def external_mages
-        ap parsed.css('a').map { |link| link['href'] }
         parsed.css('a').map { |link| link['href'] }.select{|i| i && i.match(/(.jpe?g|.png)\z/i)}
       end
 
       def parsed_images
         images_collection = inner_images + external_mages
-        ap images_collection
         images_collection
       end
     end

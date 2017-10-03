@@ -35,8 +35,8 @@ module MetaInspector
           end
           if parsed.text.match(/google.maps.LatLng\(/)
             a = parsed.text.split(/google.maps.LatLng\(/).last.split(/\)/).first
-            ap @_lng = a.split(/,/).last.to_f
-            ap @_lat = a.split(/,/).first.to_f
+            @_lng = a.split(/,/).last.to_f
+            @_lat = a.split(/,/).first.to_f
           end
 
           images = parsed.css('img').map { |img| img['src']}
