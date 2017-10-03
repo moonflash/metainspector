@@ -86,8 +86,19 @@ module MetaInspector
         parsed_images.map { |i| URL.absolutify(i, base_url) }
       end
 
-      def parsed_images
+      def inner_images
         cleanup(parsed.search('//img/@src'))
+      end
+
+      def external_mages
+        ap parsed.css('a').map { |link| link['href'] }
+        parsed.css('a').map { |link| link['href'] }.select{|i| i && i.match(/(.jpe?g|.png)\z/i)}
+      end
+
+      def parsed_images
+        images_collection = inner_images + external_mages
+        ap images_collection
+        images_collection
       end
     end
   end
