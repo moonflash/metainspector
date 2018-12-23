@@ -64,7 +64,7 @@ module MetaInspector
           secondary_description,
           readable_text
         ]
-        candidates.find { |x| x.to_s.length > 150 }
+        candidates.find { |x| x.to_s.length > 50 }
       end
 
       # Look for the first <p> block with 120 characters or more
