@@ -16,7 +16,12 @@ module MetaInspector
       end
 
       def video
-        youtube || vimeo || guardian || facebook || twitter || og_mp4
+        youtube || vimeo || guardian || facebook || twitter || og_mp4 || any_youtube
+      end
+
+      def any_youtube
+        video = parsed.xpath("//iframe").select{|a|a.to_s.include?("youtube.com")}
+        @media = video.first.to_s unless video.empty?
       end
 
       def youtube
