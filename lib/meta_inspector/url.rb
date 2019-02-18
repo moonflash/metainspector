@@ -59,8 +59,11 @@ module MetaInspector
     def self.absolutify(url, base_url)
       if url =~ /^\w*\:/i
         MetaInspector::URL.new(url).url
-      else
+      elsif url =~ /^\//
         Addressable::URI.join(base_url, url).normalize.to_s
+      else
+        domain = Addressable::URI.parse(base_url).normalized_site
+        Addressable::URI.join(domain, url).normalize.to_s
       end
     rescue MetaInspector::ParserError, Addressable::URI::InvalidURIError, ArgumentError
       nil
