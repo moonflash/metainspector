@@ -10,8 +10,46 @@ module MetaInspector
       end
 
       def best_title
-        @best_title = meta['og:title'] if @main_parser.host =~ /\.youtube\.com$/
         @best_title ||= find_best_title
+      end
+
+      def h1
+        @h1 ||= find_heading('h1')
+      end
+
+      def h2
+        @h2 ||= find_heading('h2')
+      end
+
+      def h3
+        @h3 ||= find_heading('h3')
+      end
+      
+      def h4
+        @h4 ||= find_heading('h4')
+      end
+
+      def h5
+        @h5 ||= find_heading('h5')
+      end
+
+      def h6
+        @h6 ||= find_heading('h6')
+      end
+
+      # Returns the meta author, if present
+      def author
+        @author ||= meta['author']
+      end
+
+      # An author getter that returns the first non-nil description
+      # from the following candidates:
+      # - the standard meta description
+      # - a link with the relational attribute "author"
+      # - address tag which may contain the author
+      # - the twitter:creator meta tag for the username
+      def best_author
+        @best_author ||= find_best_author
       end
 
       # Returns the meta description, if present
@@ -37,22 +75,37 @@ module MetaInspector
 
       private
 
-      # Look for candidates and pick the longest one
+      def find_heading(heading)
+        parsed.css(heading).map { |tag| tag.inner_text.strip.gsub(/\s+/, ' ') }.reject(&:empty?)
+      end
+
+      # Look for candidates per list of priority
       def find_best_title
         candidates = [
+            meta['title'],
+            meta['og:title'],
             parsed.css('head title'),
             parsed.css('body title'),
-            meta['og:title'],
             parsed.css('h1').first
         ]
         candidates.flatten!
         candidates.compact!
         candidates.map! { |c| (c.respond_to? :inner_text) ? c.inner_text : c }
-        candidates.map! { |c| c.strip }
-        return nil if candidates.empty?
-        candidates.map! { |c| c.gsub(/\s+/, ' ') }
-        candidates.uniq!
-        candidates.sort_by! { |t| -t.length }
+        candidates.map! { |c| c.strip.gsub(/\s+/, ' ') }
+        candidates.first
+      end
+
+      def find_best_author
+        candidates = [
+          meta['author'],
+          parsed.css('a[rel="author"]').first,
+          parsed.css('address').first,
+          meta['twitter:creator']
+        ]
+        candidates.flatten!
+        candidates.compact!
+        candidates.map! { |c| (c.respond_to? :inner_text) ? c.inner_text : c }
+        candidates.map! { |c| c.strip.gsub(/\s+/, ' ') }
         candidates.first
       end
 

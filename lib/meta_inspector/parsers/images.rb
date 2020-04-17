@@ -28,8 +28,8 @@ module MetaInspector
       # See doc at http://developers.facebook.com/docs/opengraph/
       # If none found, tries with Twitter image
       def owner_suggested
-        suggested_img = meta['og:image'] || meta['twitter:image']
-        URL.absolutify(suggested_img, base_url) if suggested_img
+        suggested_img = content_of(meta['og:image']) || content_of(meta['twitter:image'])
+        URL.absolutify(suggested_img, base_url, normalize: false) if suggested_img
       end
 
       # Returns an array of [img_url, width, height] sorted by image area (width * height)
@@ -37,6 +37,9 @@ module MetaInspector
         @with_size ||= begin
           img_nodes = parsed.search('//img').select{ |img_node| img_node['src'] }
           imgs_with_size = img_nodes.map { |img_node| [URL.absolutify(img_node['src'], base_url), img_node['width'], img_node['height']] }
+          imgs_with_size = img_nodes.map do |img_node|
+            [URL.absolutify(img_node['src'], base_url, normalize: false), img_node['width'], img_node['height']]
+          end
           imgs_with_size.uniq! { |url, width, height| url }
           if @download_images
             imgs_with_size.map! do |url, width, height|
@@ -71,7 +74,7 @@ module MetaInspector
       def favicon
         query = '//link[@rel="icon" or contains(@rel, "shortcut")]'
         value = parsed.xpath(query)[0].attributes['href'].value
-        @favicon ||= URL.absolutify(value, base_url)
+        @favicon ||= URL.absolutify(value, base_url, normalize: false)
       rescue
         nil
       end
@@ -83,7 +86,7 @@ module MetaInspector
       end
 
       def absolutified_images
-        parsed_images.map { |i| URL.absolutify(i, base_url) }
+        parsed_images.map { |i| URL.absolutify(i, base_url, normalize: false) }
       end
 
       def inner_images
@@ -97,6 +100,11 @@ module MetaInspector
       def parsed_images
         images_collection = inner_images + external_mages
         images_collection
+      end
+
+      def content_of(content)
+        return nil if content.nil? || content.empty?
+        content
       end
     end
   end

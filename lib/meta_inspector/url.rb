@@ -5,7 +5,7 @@ module MetaInspector
     attr_reader :url
 
     def initialize(initial_url, options = {})
-      options        = defaults.merge(options)
+      options        = self.class.defaults.merge(options)
 
       @normalize     = options[:normalize]
 
@@ -56,7 +56,8 @@ module MetaInspector
     #   http:, ftp:, telnet:, mailto:, javascript: ...
     # Protocol-relative URLs are also resolved to use the same
     # schema as the base_url
-    def self.absolutify(url, base_url)
+    def self.absolutify(url, base_url, options = {})
+      options = defaults.merge(options)
       if url =~ /^\w*\:/i
         MetaInspector::URL.new(url).url
       elsif url =~ /^\//
@@ -64,6 +65,10 @@ module MetaInspector
       else
         domain = Addressable::URI.parse(base_url).normalized_site
         Addressable::URI.join(domain, url).normalize.to_s
+        MetaInspector::URL.new(url, options).url
+      else
+        uri = Addressable::URI.join(base_url, url)
+        options[:normalize] ? uri.normalize.to_s : uri.to_s
       end
     rescue MetaInspector::ParserError, Addressable::URI::InvalidURIError, ArgumentError
       nil
@@ -71,8 +76,8 @@ module MetaInspector
 
     private
 
-    def defaults
-      { :normalize => false }
+    def self.defaults
+      { :normalize => true }
     end
 
     # Adds 'http' as default scheme, if there is none

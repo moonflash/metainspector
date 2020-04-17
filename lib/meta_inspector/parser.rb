@@ -30,10 +30,11 @@ module MetaInspector
     delegate [:media]                                               => :@media_parser
     delegate [:url, :scheme, :host]                                 => :@document
     delegate [:meta_tags, :meta_tag, :meta, :charset]               => :@meta_tag_parser
-    delegate [:head_links, :stylesheets, :canonicals, :feed]        => :@head_links_parser
     delegate [:links, :base_url]                                    => :@links_parser
     delegate :images                                                => :@images_parser
-    delegate [:title, :best_title, :description, :best_description, :readable_text] => :@texts_parser
+    delegate [:head_links, :stylesheets, :canonicals, :feeds, :feed]                       => :@head_links_parser
+    delegate [:title, :best_title, :author, :best_author, :description, :best_description, 
+              :h1, :h2, :h3, :h4, :h5, :h6]                                                => :@texts_parser
 
     # Returns the whole parsed document
     def parsed

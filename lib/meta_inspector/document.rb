@@ -18,6 +18,7 @@ module MetaInspector
       @connection_timeout = options[:connection_timeout]
       @read_timeout       = options[:read_timeout]
       @retries            = options[:retries]
+      @encoding           = options[:encoding]
 
       @allow_redirections     = options[:allow_redirections]
       @allow_non_html_content = options[:allow_non_html_content]
@@ -33,6 +34,7 @@ module MetaInspector
                                                                 connection_timeout: @connection_timeout,
                                                                 read_timeout:       @read_timeout,
                                                                 retries:            @retries,
+                                                                encoding:           @encoding,
                                                                 headers:            @headers,
                                                                 faraday_options:    @faraday_options,
                                                                 faraday_http_cache: @faraday_http_cache) unless @document
@@ -50,6 +52,11 @@ module MetaInspector
               :images, :feed, :charset, :meta_tags,
               :meta_tag, :meta, :favicon, :media, :location, :locations,
               :head_links, :stylesheets, :canonicals, :readable_text] => :@parser
+    delegate [:parsed, :title, :best_title, :author, :best_author,
+              :h1, :h2, :h3, :h4, :h5, :h6, :description, :best_description, :links,
+              :images, :feeds, :feed, :charset, :meta_tags,
+              :meta_tag, :meta, :favicon,
+              :head_links, :stylesheets, :canonicals] => :@parser
 
     # Returns all document data as a nested Hash
     def to_hash
@@ -60,12 +67,21 @@ module MetaInspector
         'root_url'         => root_url,
         'title'            => title,
         'best_title'       => best_title,
+        'author'           => author,
+        'best_author'      => best_author,
         'description'      => description,
         'best_description' => best_description,
+        'h1'               => h1,
+        'h2'               => h2,
+        'h3'               => h3,
+        'h4'               => h4,
+        'h5'               => h5,
+        'h6'               => h6,
         'links'            => links.to_hash,
         'images'           => images.to_a,
         'charset'          => charset,
         'feed'             => feed,
+        'feeds'            => feeds,
         'content_type'     => content_type,
         'meta_tags'        => meta_tags,
         'favicon'          => images.favicon,
@@ -103,7 +119,7 @@ module MetaInspector
 
     def document
       @document ||= if !allow_non_html_content && !content_type.nil? && content_type != 'text/html'
-        fail MetaInspector::ParserError.new "The url provided contains #{content_type} content instead of text/html content"
+        fail MetaInspector::NonHtmlError.new "The url provided contains #{content_type} content instead of text/html content"
       else
         @request.read
       end

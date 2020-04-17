@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 describe MetaInspector do
-
   describe "head_links" do
     let(:page) { MetaInspector.new('http://example.com/head_links') }
     let(:page_https) { MetaInspector.new('https://example.com/head_links') }
@@ -40,7 +39,10 @@ describe MetaInspector do
     context "on page with some broken feed links" do
       let(:page){ MetaInspector.new('http://example.com/broken_head_links') }
       it "tries to find correct one" do
-        expect(page.feed).to eq("http://www.guardian.co.uk/media/techcrunch/rss")
+        expected = [
+          { title: "TechCrunch RSS feed", href: "http://www.guardian.co.uk/media/techcrunch/rss", type: "application/rss+xml" }
+        ]
+        expect(page.feeds).to eq(expected)
       end
     end
   end
