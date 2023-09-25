@@ -57,10 +57,37 @@ module MetaInspector
         @description ||= meta['description']
       end
 
+      def keywords
+        # byebug
+        @keywords ||= meta.has_key?('keywords') ? meta['keywords'] : ''
+      end
+
       def readable_text
         parsed.css('script').remove
         parsed.css('style').remove
-        parsed.inner_text.gsub(/\n/," ").gsub(/\t/, "").gsub(/\s{2,}/, " ")
+        # paragraphs = parsed.search('//p')
+        readable = best_title
+        readable << " "
+        readable << description.to_s
+        readable << ' '
+        readable << keywords
+        readable << ' '
+        readable << full_text.to_s
+        readable.gsub(/\n/," ").gsub(/\t/, "").gsub(/\s{2,}/, " ")
+        readable
+      end
+
+      def full_text
+        readable = ''
+        paragraphs = parsed.search('//p')
+        if paragraphs.count > 0
+          for par in paragraphs do
+            readable << par.inner_text
+          end
+        else
+          readable = parsed.inner_text.gsub(/\n/," ").gsub(/\t/, "").gsub(/\s{2,}/, " ")
+        end
+        readable
       end
 
       # A description getter that returns the first non-nill description
@@ -114,8 +141,7 @@ module MetaInspector
           meta['description'],
           meta['og:description'],
           meta['twitter:description'],
-          secondary_description,
-          readable_text
+          secondary_description
         ]
         candidates.find { |x| x.to_s.length > 140 }
       end
@@ -124,6 +150,7 @@ module MetaInspector
       def secondary_description
         first_long_paragraph = parsed.search('//p[string-length() >= 120]').first
         first_long_paragraph ? first_long_paragraph.text.gsub(/\n/," ").gsub(/\t/, "").gsub(/\s{2,}/, " ") : ''
+        first_long_paragraph
       end
     end
   end
