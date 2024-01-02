@@ -23,6 +23,7 @@ module MetaInspector
           locations << get_uk_postcode if get_uk_postcode
           locations << google_link_parser if google_link_parser
           locations << foursquare_tag_parser if foursquare_tag_parser
+          locations << kolo_data_parser if kolo_data_parser
           return locations.empty? ? nil : locations.flatten.uniq
         end
 
@@ -52,9 +53,11 @@ module MetaInspector
 
         def foursquare_tag_parser
           MetaInspector::Parsers::Location::FoursquareTagParser.new(@main_parser).location
-          
         end
         
+        def kolo_data_parser
+          MetaInspector::Parsers::Location::KoloDataParser.new(@main_parser).location
+        end
     
       end
     end

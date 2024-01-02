@@ -150,7 +150,7 @@ module MetaInspector
       def secondary_description
         first_long_paragraph = parsed.search('//p[string-length() >= 120]').first
         first_long_paragraph ? first_long_paragraph.text.gsub(/\n/," ").gsub(/\t/, "").gsub(/\s{2,}/, " ") : ''
-        first_long_paragraph
+        first_long_paragraph.to_str
       end
     end
   end

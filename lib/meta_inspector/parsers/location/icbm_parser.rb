@@ -29,8 +29,8 @@ module MetaInspector
           end
           sp = lat_lng.split(',')
           if sp.length == 2
-            @_lat = BigDecimal.new(sp[0])
-            @_lng = BigDecimal.new(sp[1])
+            @_lat = BigDecimal(sp[0])
+            @_lng = BigDecimal(sp[1])
           end
         end
     
