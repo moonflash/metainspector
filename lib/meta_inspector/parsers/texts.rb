@@ -1,12 +1,16 @@
 module MetaInspector
   module Parsers
     class TextsParser < Base
-      delegate [:parsed, :meta] => :@main_parser
+      delegate %i[parsed meta] => :@main_parser
 
       # Returns the parsed document title, from the content of the <title> tag
       # within the <head> section.
       def title
-        @title ||= parsed.css('head title').inner_text rescue nil
+        @title ||= begin
+          parsed.css('head title').inner_text
+        rescue StandardError
+          nil
+        end
       end
 
       def best_title
@@ -24,7 +28,7 @@ module MetaInspector
       def h3
         @h3 ||= find_heading('h3')
       end
-      
+
       def h4
         @h4 ||= find_heading('h4')
       end
@@ -58,7 +62,6 @@ module MetaInspector
       end
 
       def keywords
-        # byebug
         @keywords ||= meta.has_key?('keywords') ? meta['keywords'] : ''
       end
 
@@ -67,13 +70,13 @@ module MetaInspector
         parsed.css('style').remove
         # paragraphs = parsed.search('//p')
         readable = best_title
-        readable << " "
+        readable << ' '
         readable << description.to_s
         readable << ' '
         readable << keywords
         readable << ' '
         readable << full_text.to_s
-        readable.gsub(/\n/," ").gsub(/\t/, "").gsub(/\s{2,}/, " ")
+        readable.gsub(/\n/, ' ').gsub(/\t/, '').gsub(/\s{2,}/, ' ')
         readable
       end
 
@@ -85,7 +88,7 @@ module MetaInspector
             readable << par.inner_text
           end
         else
-          readable = parsed.inner_text.gsub(/\n/," ").gsub(/\t/, "").gsub(/\s{2,}/, " ")
+          readable = parsed.inner_text.gsub(/\n/, ' ').gsub(/\t/, '').gsub(/\s{2,}/, ' ')
         end
         readable
       end
@@ -109,11 +112,11 @@ module MetaInspector
       # Look for candidates per list of priority
       def find_best_title
         candidates = [
-            meta['title'],
-            meta['og:title'],
-            parsed.css('head title'),
-            parsed.css('body title'),
-            parsed.css('h1').first
+          meta['title'],
+          meta['og:title'],
+          parsed.css('head title'),
+          parsed.css('body title'),
+          parsed.css('h1').first
         ]
         candidates.flatten!
         candidates.compact!
@@ -149,8 +152,8 @@ module MetaInspector
       # Look for the first <p> block with 120 characters or more
       def secondary_description
         first_long_paragraph = parsed.search('//p[string-length() >= 120]').first
-        first_long_paragraph ? first_long_paragraph.text.gsub(/\n/," ").gsub(/\t/, "").gsub(/\s{2,}/, " ") : ''
-        first_long_paragraph.to_str
+        first_long_paragraph ? first_long_paragraph.text.gsub(/\n/, ' ').gsub(/\t/, '').gsub(/\s{2,}/, ' ') : ''
+        first_long_paragraph.inner_text
       end
     end
   end
