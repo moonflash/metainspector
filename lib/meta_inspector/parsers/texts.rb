@@ -69,7 +69,7 @@ module MetaInspector
         parsed.css('script').remove
         parsed.css('style').remove
         # paragraphs = parsed.search('//p')
-        readable = best_title
+        readable = best_title || ''
         readable << ' '
         readable << description.to_s
         readable << ' '
