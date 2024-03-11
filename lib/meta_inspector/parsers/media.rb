@@ -21,15 +21,15 @@ module MetaInspector
 
       def any_youtube
         video = parsed.xpath("//iframe").select{|a|a.to_s.include?("youtube.com")}
-        @media = video.first.to_s unless video.empty?
+        @media = video.first.to_s.gsub("data-src=", "src=") unless video.empty?
       end
 
       def youtube
         return unless uri.host.include?("youtube.com")
         video = CGI::parse(uri.query)["v"]
         if uri.query && CGI::parse(uri.query)["v"]
-          url = "https://www.youtube.com/embed/#{video.first}?autoplay=1"
-          @media ||= "<iframe width='560' height='315' src='#{url}' frameborder='0' allowfullscreen></iframe>"
+          url = "https://www.youtube.com/embed/#{video.first}"
+          @media ||= "<iframe width='560' height='315' src='#{url}' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share' allowfullscreen></iframe>"
         end
       end
 
@@ -37,7 +37,7 @@ module MetaInspector
         return unless uri.host.include?("vimeo.com") && uri.path.gsub(/^\//,'').to_i != 0
         if uri.path && CGI::parse(uri.path)["v"]
           video_id = uri.path.gsub(/^\//,'').to_i
-          @media = "<iframe src='https://player.vimeo.com/video/#{video_id}?color=a9aaab&title=0&byline=0&portrait=0&badge=0' width='640' height='360' frameborder='0' webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>"
+          @media = "<iframe src='https://player.vimeo.com/video/#{video_id}?color=a9aaab&title=0&byline=0&portrait=0&badge=0' width='640' height='360' frameborder='0'  allowfullscreen></iframe>"
         end
       end
 
@@ -57,7 +57,7 @@ module MetaInspector
       end
 
       def twitter
-        return unless uri.host.include?("twitter.com") 
+        return unless uri.host.include?("twitter.com")
         suggested_img = meta['og:video:url']
         height = meta['og:video:height'] || '400px'
         src = URL.absolutify(suggested_img, base_url) if suggested_img
