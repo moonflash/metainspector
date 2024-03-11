@@ -16,7 +16,12 @@ module MetaInspector
       end
 
       def video
-        youtube || vimeo || guardian || facebook || twitter || og_mp4 || any_youtube
+        youtube || vimeo || guardian || facebook || twitter || og_mp4 || any_youtube || any_vimeo
+      end
+
+      def any_vimeo
+        video = parsed.xpath("//iframe").select{|a|a.to_s.include?("player.vimeo.com")}
+        @media = video.first.to_s.gsub("data-src=", "src=") unless video.empty?
       end
 
       def any_youtube
