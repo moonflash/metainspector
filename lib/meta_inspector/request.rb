@@ -84,7 +84,7 @@ module MetaInspector
           req.options.open_timeout = @read_timeout
         end
 
-        @url.url = response.env.url.to_s
+        @url.url = response.env.url.to_s&.split('#')&.first&.chomp('/')
 
         response
       end
