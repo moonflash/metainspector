@@ -80,13 +80,13 @@ module MetaInspector
 
     # Adds 'http' as default scheme, if there is none
     def with_default_scheme(url)
-      parsed(url) && parsed(url).scheme.nil? ? 'http://' + url : url
+      parsed(url) && parsed(url).scheme.nil? ? 'https://' + url : url
     end
 
     # Normalize url to deal with characters that should be encoded,
     # add trailing slash, convert to downcase...
     def normalized(url)
-      Addressable::URI.parse(url).normalize.to_s
+      Addressable::URI.parse(url).normalize.to_s&.split('#')&.first&.chomp('/')
     rescue Addressable::URI::InvalidURIError => e
       raise MetaInspector::ParserError.new(e)
     end
