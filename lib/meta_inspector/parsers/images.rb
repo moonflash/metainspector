@@ -65,9 +65,11 @@ module MetaInspector
             ratio = width.to_f / height.to_f
             ratio > 0.1 && ratio < 10
           end
+          imgs_with_size.sort_by! { |url, width, height| -(width.to_i * height.to_i) }
           url, width, height = imgs_with_size.first
           url
         end
+        @largest_image
       end
 
       # Return favicon url if exist
